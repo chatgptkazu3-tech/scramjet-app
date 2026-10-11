@@ -18,7 +18,7 @@ footer{border-top:1px solid #303c51;padding:20px 0 45px;color:#98a9c4;font-size:
 .graph-intro strong{font-size:13px;color:#fff}
 .diagram-box{height:min(76vh,760px);min-height:520px;cursor:grab;touch-action:none;user-select:none;overscroll-behavior:contain;border:1px solid #566b8a;background:radial-gradient(circle at 50% 48%,#172a47,#090e1d 75%)}
 .diagram-box:active{cursor:grabbing}
-.graph-world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;pointer-events:none}
+.graph-world{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none}
 .graph-world>svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
 #graphNodes{position:absolute;inset:0;pointer-events:none}
 .graph-group{position:absolute;background:#1b29405f;border:2px solid #6380a34d;border-radius:22px;box-shadow:inset 0 0 52px #2e4f7514;pointer-events:none}
@@ -70,16 +70,38 @@ const $=s=>document.querySelector(s);const colors={ally:'#70b5fa',family:'#78d9b
 let spoiler=false,view='list',q='',filterGroup='all',selected='tony',page=0,photo={};
 const pVisible=p=>spoiler||p.era==='early';const visiblePeople=()=>people.filter(p=>pVisible(p));const relationFor=id=>edges.filter(e=>(e.a===id||e.b===id)&&pVisible(byId[e.a])&&pVisible(byId[e.b]));
 const match=p=>pVisible(p)&&(filterGroup==='all'||p.group===filterGroup)&&(!q||`${p.name} ${p.first} ${p.info} ${p.actor||''}`.toLowerCase().includes(q));
-function avatar(p){const div=document.createElement('div');div.className='avatar';div.style.setProperty('--color',byGroup[p.group]?.color||'#8b9da8');
-const title=document.createElement('b');title.textContent=p.name.slice(0,2);div.append(title);const img=document.createElement('img');img.alt=p.name;img.loading='lazy';img.referrerPolicy='no-referrer';img.dataset.pic=p.id;
-img.onload=()=>img.classList.add('loaded');img.onerror=()=>{img.removeAttribute('src');img.classList.remove('loaded')};if(photo[p.id])img.src=photo[p.id];div.append(img);return div}
-function avatarUpdate(id,url){if(!url||typeof url!=='string')return;photo[id]=url;document.querySelectorAll(`img[data-pic="${id}"]`).forEach(img=>{if(img.src!==url)img.src=url})}
-function createPersonButton(p,cls){const el=document.createElement('button');el.type='button';el.className=cls;el.append(avatar(p));const t=document.createElement('span');t.className='persontext';const name=document.createElement('span');name.className=cls==='person'?'cardname':'name';name.textContent=p.name;t.append(name);if(cls==='person'){const first=document.createElement('small');first.className='cardfirst';first.textContent=safeFirst(p.first);t.append(first)}el.append(t);el.onclick=()=>openPerson(p.id);return el}
+function avatar(p, graph=false){const div=document.createElement('div');div.className='avatar';div.style.setProperty('--color',byGroup[p.group]?.color||'#8b9da8');
+const title=document.createElement('b');title.textContent=p.name.slice(0,2);div.append(title);const img=document.createElement('img');img.alt=p.name;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';img.dataset.pic=p.id;if(graph)img.dataset.graphAvatar='1';
+img.onload=()=>img.classList.add('loaded');img.onerror=()=>{img.removeAttribute('src');img.classList.remove('loaded')};if(photo[p.id]&&!graph)img.src=photo[p.id];div.append(img);return div}
+function avatarUpdate(id,url){if(!url||typeof url!=='string')return;photo[id]=url;document.querySelectorAll(`img[data-pic="${id}"]`).forEach(img=>{if(img.dataset.graphAvatar==="1")return;if(img.src!==url)img.src=url});scheduleGraphAvatarUpdate()}
+function createPersonButton(p,cls){const el=document.createElement('button');el.type='button';el.className=cls;el.append(avatar(p,cls==='diagram-person'));const t=document.createElement('span');t.className='persontext';const name=document.createElement('span');name.className=cls==='person'?'cardname':'name';name.textContent=p.name;t.append(name);if(cls==='person'){const first=document.createElement('small');first.className='cardfirst';first.textContent=safeFirst(p.first);t.append(first)}el.append(t);el.onclick=()=>openPerson(p.id);return el}
 function safeFirst(s){return spoiler?s:(s.split('／')[0]||s)}
 function renderCatalog(){const out=$('#catalog');out.replaceChildren();let matched=0;for(const g of groups){const ps=people.filter(p=>p.group===g.id&&match(p));if(!ps.length)continue;matched+=ps.length;const sec=document.createElement('section');sec.className='group';const title=document.createElement('div');title.className='group-head';const dot=document.createElement('span');dot.className='dot';dot.style.setProperty('--color',g.color);const h=document.createElement('h2');h.textContent=g.title;const count=document.createElement('small');count.textContent=ps.length+'人';title.append(dot,h,count);sec.append(title);const grid=document.createElement('div');grid.className='cards';ps.forEach(p=>grid.append(createPersonButton(p,'person')));sec.append(grid);out.append(sec)}if(!matched){const msg=document.createElement('div');msg.className='empty';msg.textContent='該当する人物がいません。検索条件を変えてみて。';out.append(msg)}$('#nShown').textContent=matched;}
 const personLabel=(p,e)=>{const obj=document.createElement('button');obj.type='button';obj.className='rel';obj.append(avatar(p));const txt=document.createElement('div');const name=document.createElement('div');name.className='rel-name';name.textContent=p.name;const lab=document.createElement('div');lab.className='rel-label';lab.textContent=e.label;txt.append(name,lab);obj.append(txt);const line=document.createElement('span');line.className='rline';line.style.setProperty('--stroke',colors[e.type]);obj.append(line);obj.onclick=()=>openPerson(p.id);return obj};
 const GROUP_W=638,GROUP_H=535,GROUP_STEP_X=670,GROUP_STEP_Y=565,CELL_X=149,CELL_Y=91;
 let graphLayout=null,graphTransform={x:0,y:0,k:1},graphHasCamera=false;
+let graphPhotoTimer=0;
+function scheduleGraphAvatarUpdate(){if(graphPhotoTimer)return;graphPhotoTimer=setTimeout(()=>{graphPhotoTimer=0;updateGraphAvatarPhotos()},140)}
+function updateGraphAvatarPhotos(){
+ if(view!=='map'||!graphLayout)return;
+ const elements=Array.from(document.querySelectorAll('#graphNodes .diagram-person'));
+ const {w,h}=pointBounds(),k=graphTransform.k,margin=80;
+ const candidates=[];
+ for(const el of elements){const id=el.dataset.id,p=graphLayout.positions[id];if(!p||!photo[id])continue;
+  const x=graphTransform.x+p.x*k,y=graphTransform.y+p.y*k;
+  if(x<-margin||y<-margin||x>w+margin||y>h+margin)continue;
+  const score=(id===selected?-10000000:0)+(x-w/2)**2+(y-h/2)**2;
+  candidates.push({id,score});
+ }
+ candidates.sort((a,b)=>a.score-b.score);
+ const cap=window.matchMedia('(max-width:700px)').matches?10:26;
+ const permitted=new Set(candidates.slice(0,cap).map(x=>x.id));
+ for(const el of elements){const id=el.dataset.id,img=el.querySelector('img[data-graph-avatar]');if(!img)continue;
+  if(permitted.has(id)){const u=photo[id];if(img.getAttribute('src')!==u)img.src=u}
+  else if(img.hasAttribute('src')){img.removeAttribute('src');img.classList.remove('loaded')}
+ }
+}
+
 const activePointers=new Map();let pointerState=null,lastPinch=null;
 function diagramData(){const nodes=visiblePeople();const valid=new Set(nodes.map(p=>p.id));return {nodes,links:edges.filter(e=>valid.has(e.a)&&valid.has(e.b))}}
 function layoutNetwork(nodes,links){
@@ -93,7 +115,7 @@ function layoutNetwork(nodes,links){
  return {nodes,links,positions,groupBoxes,width:columns*GROUP_STEP_X+30,height:rows*GROUP_STEP_Y+30};
 }
 function pointBounds(){const graph=$('#graph');return {w:Math.max(graph.clientWidth,320),h:Math.max(graph.clientHeight,420)}}
-function applyCamera(){const w=$('#graphWorld');w.style.transform=`translate(${graphTransform.x}px,${graphTransform.y}px) scale(${graphTransform.k})`;$('#zoomInfo').textContent=Math.round(graphTransform.k*100)+'%'}
+function applyCamera(){const w=$('#graphWorld');w.style.transform=`translate(${graphTransform.x}px,${graphTransform.y}px) scale(${graphTransform.k})`;$('#zoomInfo').textContent=Math.round(graphTransform.k*100)+'%';scheduleGraphAvatarUpdate()}
 function fitGraph(){if(!graphLayout)return;const {w,h}=pointBounds(),pad=22;const k=Math.min((w-pad*2)/graphLayout.width,(h-pad*2)/graphLayout.height);
  graphTransform={k,x:(w-graphLayout.width*k)/2,y:(h-graphLayout.height*k)/2};graphHasCamera=true;applyCamera()}
 function zoomAt(factor,screenX,screenY){if(!graphLayout)return;const k=Math.max(.075,Math.min(3.5,graphTransform.k*factor));const ratio=k/graphTransform.k;graphTransform.x=screenX-(screenX-graphTransform.x)*ratio;graphTransform.y=screenY-(screenY-graphTransform.y)*ratio;graphTransform.k=k;applyCamera()}
@@ -123,10 +145,11 @@ const info=document.createElement('p');info.textContent=p.info;d.append(info);co
 const rels=relationFor(id);const h=document.createElement('h3');h.textContent='直接つながる人物 '+rels.length+'人';d.append(h);const list=document.createElement('div');list.className='rel-list';rels.forEach(e=>list.append(personLabel(byId[e.a===id?e.b:e.a],e)));d.append(list);
 const btn=document.createElement('button');btn.type='button';btn.className='action backmap';btn.textContent='🕸 この人を相関図の中心にする';btn.onclick=()=>{closeDetails();setView('map');setSelected(id);window.scrollTo({top:0,behavior:'smooth'})};d.append(btn);
 $('#shade').hidden=false;$('#drawer').classList.add('open');document.body.style.overflow='hidden';$('#drawer').focus({preventScroll:true})}
-function openPerson(id){setSelected(id);showDetails(id)}
+function openPerson(id){setSelected(id);showDetails(id);loadPhotoOnDemand(id)}
+async function loadPhotoOnDemand(id){const p=byId[id];if(!p||photo[id]||loadedSet.has(id))return;loadedSet.add(id);const m=await wikiLookup([p.wiki,p.actor]);const src=m.get(p.wiki)||m.get(p.actor);if(src)avatarUpdate(id,src)}
 function closeDetails(){$('#shade').hidden=true;$('#drawer').classList.remove('open');document.body.style.overflow=''}
 $('#close').onclick=closeDetails;$('#shade').onclick=closeDetails;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetails()});
-function setView(next){view=next;$('#catalog').hidden=view!=='list';$('#diagram').hidden=view!=='map';$('#tabList').classList.toggle('active',view==='list');$('#tabMap').classList.toggle('active',view==='map');if(view==='map')requestAnimationFrame(renderDiagram)}
+function setView(next){view=next;if(view==='list')renderCatalog();else $('#catalog').replaceChildren();$('#catalog').hidden=view!=='list';$('#diagram').hidden=view!=='map';$('#tabList').classList.toggle('active',view==='list');$('#tabMap').classList.toggle('active',view==='map');if(view==='map')requestAnimationFrame(renderDiagram)}
 $('#tabList').onclick=()=>setView('list');$('#tabMap').onclick=()=>setView('map');$('#detailsBtn').onclick=()=>showDetails(selected);
 $('#zoomIn').onclick=()=>{const {w,h}=pointBounds();zoomAt(1.6,w/2,h/2)};
 $('#zoomOut').onclick=()=>{const {w,h}=pointBounds();zoomAt(1/1.6,w/2,h/2)};
@@ -138,9 +161,9 @@ stage.addEventListener('pointermove',e=>{if(!activePointers.has(e.pointerId))ret
 function endPointer(e){activePointers.delete(e.pointerId);lastPinch=pinched();pointerState=activePointers.size===1?[...activePointers.values()][0]:null}
 stage.addEventListener('pointerup',endPointer);stage.addEventListener('pointercancel',endPointer);stage.addEventListener('lostpointercapture',endPointer);
 stage.addEventListener('keydown',e=>{if(e.key==='+'||e.key==='='){e.preventDefault();const {w,h}=pointBounds();zoomAt(1.4,w/2,h/2)}else if(e.key==='-'){e.preventDefault();const {w,h}=pointBounds();zoomAt(1/1.4,w/2,h/2)}else if(e.key==='0'){e.preventDefault();fitGraph()}});
-$('#search').oninput=e=>{q=e.target.value.toLowerCase().trim();renderCatalog();if(view==='map'&&graphLayout){const matches=graphLayout.nodes.filter(n=>match(n));const first=matches.find(n=>n.name.toLowerCase().includes(q))||matches[0];if(first){setSelected(first.id);if(q.length>=2)focusNode(first.id,1.05)}else refreshGraphSelection()}};
-$('#groupSel').onchange=e=>{filterGroup=e.target.value;renderCatalog();if(view==='map'&&graphLayout){const first=graphLayout.nodes.find(n=>match(n));if(first){setSelected(first.id);focusNode(first.id,.9)}else refreshGraphSelection()}};
-$('#spoilers').onchange=e=>{spoiler=e.target.checked;$('#warn').hidden=!spoiler;renderCatalog();if(!pVisible(byId[selected]))selected='tony';graphLayout=null;graphHasCamera=false;if(view==='map')requestAnimationFrame(renderDiagram);schedulePhotos()};
+$('#search').oninput=e=>{q=e.target.value.toLowerCase().trim();if(view==='list')renderCatalog();else $('#nShown').textContent=people.filter(match).length;if(view==='map'&&graphLayout){const matches=graphLayout.nodes.filter(n=>match(n));const first=matches.find(n=>n.name.toLowerCase().includes(q))||matches[0];if(first){setSelected(first.id);if(q.length>=2)focusNode(first.id,1.05)}else refreshGraphSelection()}};
+$('#groupSel').onchange=e=>{filterGroup=e.target.value;if(view==='list')renderCatalog();else $('#nShown').textContent=people.filter(match).length;if(view==='map'&&graphLayout){const first=graphLayout.nodes.find(n=>match(n));if(first){setSelected(first.id);focusNode(first.id,.9)}else refreshGraphSelection()}};
+$('#spoilers').onchange=e=>{spoiler=e.target.checked;$('#warn').hidden=!spoiler;if(view==='list')renderCatalog();else $('#nShown').textContent=people.filter(match).length;if(!pVisible(byId[selected]))selected='tony';graphLayout=null;graphHasCamera=false;if(view==='map')requestAnimationFrame(renderDiagram)};
 for(const g of groups){const o=document.createElement('option');o.value=g.id;o.textContent=g.title;$('#groupSel').append(o)}
 $('#nAll').textContent=people.length;$('#nGroup').textContent=groups.length;$('#nEdges').textContent=edges.length;
 async function wikiLookup(names){const all=new Map();const unique=[...new Set(names.filter(Boolean))];for(let i=0;i<unique.length;i+=35){const chunk=unique.slice(i,i+35);const url=new URL('https://en.wikipedia.org/w/api.php');url.search=new URLSearchParams({action:'query',format:'json',formatversion:'2',origin:'*',redirects:'1',prop:'pageimages',piprop:'thumbnail',pithumbsize:'220',pilicense:'any',titles:chunk.join('|')}).toString();try{const response=await fetch(url,{signal:AbortSignal.timeout(18000)});if(!response.ok)continue;const json=await response.json();const aliases=new Map((json.query?.redirects||[]).map(r=>[r.from,r.to]));const norm=new Map((json.query?.normalized||[]).map(r=>[r.from,r.to]));const found=new Map((json.query?.pages||[]).map(pg=>[pg.title,pg.thumbnail?.source]));for(const name of chunk){let title=norm.get(name)||name;title=aliases.get(title)||title;all.set(name,found.get(title)||null)}}catch(e){console.warn('Photo source unavailable',e)}}return all}
@@ -150,7 +173,7 @@ for(const [id,url] of Object.entries(embeddedPhotos)){if(byId[id]){photo[id]=url
 async function schedulePhotos(){if(loadingPhotos)return;const active=visiblePeople().filter(p=>!loadedSet.has(p.id));if(!active.length)return;loadingPhotos=true;
 try{const titles=active.flatMap(p=>[p.wiki,p.actor]).filter(Boolean);const maps=await wikiLookup(titles);for(const p of active){const src=maps.get(p.wiki)||maps.get(p.actor);if(src)avatarUpdate(p.id,src);loadedSet.add(p.id)}try{localStorage.setItem('mcu-photo-cache-v4',JSON.stringify(photo))}catch(e){}}finally{loadingPhotos=false;if(visiblePeople().some(p=>!loadedSet.has(p.id)))setTimeout(schedulePhotos,100)}}
 try{const cache=JSON.parse(localStorage.getItem('mcu-photo-cache-v4')||'{}');if(cache&&typeof cache==='object')for(const [id,u] of Object.entries(cache))if(byId[id]&&typeof u==='string'&&!photo[id])photo[id]=u}catch(e){}
-renderCatalog();setView('map');schedulePhotos();
+$('#nShown').textContent=people.filter(match).length;setView(window.matchMedia('(max-width:700px)').matches?'list':'map');
 window.addEventListener('resize',()=>{if(view==='map')fitGraph()});
 })();
 </script></body></html>
