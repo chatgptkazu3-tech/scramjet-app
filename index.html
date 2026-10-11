@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10121e">
+<title>MARVEL 人物相関図 | インフィニティ・ウォー直前</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;color:#f7f8ff;background:#0b0e19;--muted:#a3adc9;--border:#353951;--surface:#171b2e;--accent:#f0404d}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse 90% 60% at 18% 5%,#29335566,transparent 70%),radial-gradient(ellipse 90% 58% at 96% 6%,#5a23424d,transparent 65%),#0b0e19}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #97c5ff;outline-offset:2px}
+.topbar{position:sticky;top:0;z-index:10;background:#0c1019e8;backdrop-filter:blur(20px);border-bottom:1px solid #ffffff1b}.top-inner{max-width:1600px;margin:auto;display:flex;gap:15px;align-items:center;justify-content:space-between;padding:13px 20px}.logo{font-weight:950;letter-spacing:.09em;background:#e62429;padding:5px 9px;border-radius:3px;font-size:20px}.top-sub{font-size:12px;color:#b9c3dc;letter-spacing:.08em}.logo-wrap{display:flex;align-items:center;gap:12px}.top-note{font-size:11px;color:#aab2cd}
+.hero{max-width:1600px;margin:0 auto;padding:24px 20px 13px}.hero-top{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}.eyebrow{color:#fa747c;font-size:12px;font-weight:850;letter-spacing:.13em}.hero h1{font-size:clamp(23px,3vw,38px);margin:5px 0 9px;line-height:1.3;letter-spacing:-.02em}.hero p{font-size:13px;color:#b5c0dc;line-height:1.7;margin:0}.stats{display:flex;gap:9px}.stat{border:1px solid #3b4560;border-radius:13px;background:#ffffff08;padding:10px 13px;font-size:12px;text-align:center;color:#b9c5da}.stat b{display:block;font-size:22px;color:#fff;line-height:1.1}
+.toolbar{max-width:1600px;padding:5px 20px 12px;margin:auto;display:flex;gap:9px;align-items:center;flex-wrap:wrap}.tabs{display:flex;border-radius:11px;padding:4px;background:#21263a;border:1px solid #383e58}.tab{border:0;color:#adbad6;background:transparent;padding:9px 14px;border-radius:8px;font-size:13px;font-weight:750}.tab.active{background:#e62429;color:white}.search{flex:1;min-width:155px;max-width:340px;position:relative}.search input{width:100%;border-radius:11px;border:1px solid #383e58;background:#171c2c;color:white;padding:12px 12px 12px 36px;font-size:14px}.search svg{position:absolute;left:11px;top:13px;fill:none;stroke:#8490ab;width:16px;height:16px}.control{border:1px solid #363e54;color:#e5e9fb;background:#1b2032;padding:9px 12px;border-radius:10px;font-size:13px;font-weight:750;white-space:nowrap}.control.active{border-color:#f05a62;color:#fff;background:#822b37}.control:disabled{opacity:.5;cursor:not-allowed}.group-filters{max-width:1600px;margin:auto;display:flex;flex-wrap:wrap;gap:7px;padding:0 20px 12px}.group-chip{border:1px solid #ffffff2d;background:#151a2c;color:#dbe0f3;border-radius:999px;font-size:12px;padding:7px 11px;display:flex;align-items:center;gap:6px}.group-chip.active{border-color:#fff;background:#414b6d}.group-dot{display:inline-block;width:8px;height:8px;border-radius:100%;background:var(--dot)}
+.stage-area{max-width:1600px;margin:auto;padding:0 20px}.map-viewport{height:clamp(530px,68vh,840px);overflow:hidden;position:relative;background:linear-gradient(90deg,#ffffff05 1px,transparent 1px),linear-gradient(#ffffff05 1px,transparent 1px),#0f1221;background-size:32px 32px;border:1px solid #3c425a;border-radius:20px;touch-action:none;cursor:grab}.map-viewport.dragging{cursor:grabbing}.world{width:2390px;height:1400px;position:absolute;top:0;left:0;transform-origin:0 0}.edges{position:absolute;inset:0;width:2390px;height:1400px;overflow:visible;pointer-events:none}.edge{fill:none;stroke-width:2.5;opacity:.29;stroke-linecap:round;transition:opacity .15s,stroke-width .15s}.edge.active{opacity:1;stroke-width:5}.edge.faded{opacity:.035}.edge.hidden{display:none}.line-label{font-size:18px;fill:#fff;paint-order:stroke;stroke:#161b2a;stroke-width:6px;letter-spacing:.02em;font-weight:750;pointer-events:none}
+.zone{position:absolute;border:1.5px solid color-mix(in srgb,var(--zone) 45%,transparent);border-radius:22px;background:linear-gradient(165deg,color-mix(in srgb,var(--zone) 11%,#15192b),#101422ec);box-shadow:inset 0 1px 0 #ffffff10}.zone:before{position:absolute;content:'';height:4px;background:var(--zone);width:92px;top:0;left:26px;border-radius:0 0 6px 6px}.zone-head{padding:18px 22px 4px;display:flex;gap:14px;align-items:baseline}.zone-head h2{font-size:26px;line-height:1.1;margin:0;color:#fff;font-weight:900}.zone-head p{font-size:15px;color:#c4c7d4;margin:0}
+.person-node{position:absolute;border:1px solid #ffffff33;background:#151b2ddc;border-radius:14px;width:165px;height:136px;padding:7px 7px 9px;color:#fff;display:flex;align-items:center;flex-direction:column;gap:7px;overflow:hidden;box-shadow:0 6px 17px #0005;transition:border-color .15s,background .15s,opacity .15s,box-shadow .15s;z-index:2}.person-node:hover,.person-node.selected{border-color:#f5f5fe;box-shadow:0 0 0 3px #e3edff66,0 12px 28px #000a;background:#262d47}.person-node.faded{opacity:.16}.person-node.matched{box-shadow:0 0 0 4px #ffdd83b3}.avatar{position:relative;display:flex;align-items:center;justify-content:center;width:86px;height:86px;border-radius:50%;flex-shrink:0;border:2px solid color-mix(in srgb,var(--person-color) 70%,#fff);background:radial-gradient(circle at 35% 25%,color-mix(in srgb,var(--person-color) 28%,#222b45),#131826);overflow:hidden}.avatar img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;display:none}.avatar img.ready{display:block}.avatar b{font-size:23px;font-weight:800;color:#fff}.person-label{font-size:14px;font-weight:850;white-space:normal;line-height:1.22;text-align:center;width:100%;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}.node-noimg{font-size:10px;color:#b9c2dd}
+.map-help{position:absolute;left:13px;bottom:13px;background:#101524e5;border:1px solid #ffffff25;padding:9px 11px;border-radius:12px;color:#d6e2f9;font-size:12px;pointer-events:none}.zoom-controls{position:absolute;top:12px;right:12px;display:flex;gap:5px}.zoom-controls button{background:#13192ae8;color:#e6e9ff;border:1px solid #ffffff40;border-radius:9px;height:38px;min-width:39px;font-weight:900}.zone-summary{position:absolute;left:1592px;top:1000px;width:778px;height:360px;background:#131b2cea;border:1.5px dashed #777e96;border-radius:22px;padding:25px 29px}.zone-summary h2{font-size:28px;margin:0 0 15px}.zone-summary p{font-size:19px;color:#c5cde3;line-height:1.8}.summary-item{display:flex;gap:10px;margin:9px 0;align-items:baseline;font-size:18px}.summary-item span:first-child{color:#f3747b;font-weight:900}
+.legend{display:flex;align-items:center;gap:13px;flex-wrap:wrap;padding:14px 4px 8px;color:#afb9d7;font-size:12px}.legend-item{display:flex;gap:7px;align-items:center}.legend-stroke{width:24px;height:3px;border-radius:3px;background:var(--edge)}
+#list{max-width:1600px;margin:0 auto;padding:0 20px}.list-group{margin:15px 0 25px}.list-group-title{font-size:20px;font-weight:850;display:flex;gap:10px;align-items:center;margin:0 0 13px}.list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:13px}.list-person{color:#fff;display:flex;align-items:center;gap:12px;background:#161c2f;border:1px solid #343b55;border-radius:14px;text-align:left;padding:9px 10px;min-height:76px;transition:border-color .15s}.list-person:hover{border-color:#eee}.list-person .avatar{width:55px;height:55px;border-width:1px}.list-person .avatar b{font-size:18px}.list-person strong{font-size:13px;line-height:1.4}.list-person small{display:block;color:#a8b4d0;font-size:11px;margin-top:3px}
+.empty{text-align:center;color:#b9c5db;padding:60px 20px}
+.backdrop{position:fixed;inset:0;background:#050714b8;z-index:20;backdrop-filter:blur(4px);display:none}.backdrop.visible{display:block}.detail{position:fixed;top:0;right:0;height:100dvh;width:min(470px,100vw);z-index:21;background:#151a2c;border-left:1px solid #454963;box-shadow:-18px 0 40px #0009;transform:translateX(102%);transition:transform .23s ease;overflow-y:auto;padding:24px}.detail.open{transform:translateX(0)}.detail-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.detail-eyebrow{font-size:11px;color:#9caacc;text-transform:uppercase;letter-spacing:.12em}.close{border:1px solid #535870;border-radius:10px;background:#222a41;color:#fff;width:40px;height:40px;font-size:24px}.detail-profile{display:flex;gap:19px;align-items:center}.detail-profile .avatar{height:116px;width:116px}.detail-profile .avatar b{font-size:32px}.detail-name{font-size:25px;margin:0 0 7px;line-height:1.3}.detail-tag{display:inline-flex;align-items:center;gap:7px;color:#e6eaff;font-size:12px;border:1px solid #ffffff38;border-radius:8px;padding:6px 9px}.detail-p{color:#d1d8eb;font-size:14px;line-height:1.9;margin:20px 0}.mini-label{font-size:11px;color:#91a1c2;font-weight:800;letter-spacing:.11em;margin-top:20px}.first-movie{font-size:13px;color:#d0d9f2;margin:7px 0}.relation-list{display:grid;gap:8px;margin-top:9px}.relation-link{background:#232a3f;border:1px solid #414b64;color:#fff;display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:12px;text-align:left}.relation-link .avatar{width:45px;height:45px}.relation-link .avatar b{font-size:14px}.relation-link strong{font-size:13px}.relation-link small{display:block;font-size:11px;color:#b8c3dd;margin-top:2px}.edge-marker{width:4px;height:32px;background:var(--edge);border-radius:2px;margin-left:auto}.photo-source{color:#8796b8;font-size:11px;line-height:1.7;margin:19px 0 0}
+.footer{max-width:1600px;margin:auto;padding:23px 20px 35px;color:#808eae;font-size:11px;line-height:1.7}.footer a{color:#b4c6fb}
+[hidden]{display:none!important}
+@media(max-width:800px){.top-inner{padding:11px 13px}.top-note{display:none}.hero{padding:17px 13px 12px}.toolbar{padding:5px 13px 11px}.group-filters{padding:0 13px 10px}.stage-area{padding:0 9px}.map-viewport{height:68dvh;min-height:440px;border-radius:13px}.hero-top{align-items:flex-start}.stat{padding:8px 10px}.stat b{font-size:19px}.list-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.list-person{min-height:75px;padding:7px}.list-person .avatar{width:45px;height:45px}.list-person strong{font-size:12px}.list-person small{font-size:10px}.detail{padding:18px}.detail-name{font-size:23px}.detail-profile .avatar{width:102px;height:102px}.map-help{bottom:9px;left:9px;font-size:10px;max-width:230px}.toolbar .control{padding:10px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="top-inner"><div class="logo-wrap"><span class="logo">MARVEL</span><span class="top-sub">CHARACTER RELATIONSHIP MAP</span></div><span class="top-note">INFINITY WAR / STORY GUIDE / SPOILER-FREE</span></div></header>
+<section class="hero"><div class="hero-top"><div><div class="eyebrow">インフィニティ・ウォーを見る前に</div><h1>人物のつながりがわかる相関図</h1><p>『シビル・ウォー』『ブラックパンサー』『バトルロイヤル』までの内容。人物をタップすると関係を詳しく表示。</p></div><div class="stats"><div class="stat"><b id="numPeople">41</b>人物</div><div class="stat"><b>7</b>グループ</div><div class="stat"><b id="numRelations">46</b>関係</div></div></div></section>
+<div class="toolbar"><div class="tabs" role="tablist"><button type="button" class="tab active" id="mapTab" aria-selected="true">🕸 相関図</button><button type="button" class="tab" id="listTab" aria-selected="false">▦ 写真一覧</button></div><div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke-width="2"/><path d="m16 16 5 5" stroke-width="2"/></svg><input aria-label="人物名・作品で検索" id="q" type="search" placeholder="人物名・作品で検索"></div><button type="button" class="control" id="allLines" aria-pressed="false" title="全ての人間関係を線で表示">線をすべて表示</button><button type="button" class="control" id="reset">表示を戻す</button></div>
+<div class="group-filters" id="groupFilters"></div>
+<section class="stage-area" id="mapSection"><div class="map-viewport" id="viewport" aria-label="人物の関係図。ドラッグして移動できます"><div class="world" id="world"><svg class="edges" id="edges" viewBox="0 0 2390 1400" aria-hidden="true"></svg><section class="zone-summary"><h2>見る前に押さえる4つ</h2><div class="summary-item"><span>01</span> アベンジャーズは政府の協定をめぐって分裂中</div><div class="summary-item"><span>02</span> サノスは6つのストーンを狙っている</div><div class="summary-item"><span>03</span> ガモーラとネビュラはサノスの養女</div><div class="summary-item"><span>04</span> ロス国務長官とCIAのロスは別人</div></section></div><div class="zoom-controls"><button id="minus" title="縮小" aria-label="縮小">−</button><button id="plus" title="拡大" aria-label="拡大">＋</button><button id="fit" title="全体表示" aria-label="全体表示">全体</button></div><div class="map-help">ドラッグで移動・ホイールで拡大縮小・人物を押して詳細</div></div></section>
+<section id="list" hidden></section>
+<div class="stage-area"><div class="legend"><span style="font-weight:800;color:#e0e5f4">線の意味</span><div class="legend-item"><span class="legend-stroke" style="--edge:#70b5fa"></span>仲間・協力</div><div class="legend-item"><span class="legend-stroke" style="--edge:#78d9b7"></span>家族・親しい</div><div class="legend-item"><span class="legend-stroke" style="--edge:#fa8088"></span>対立・敵対</div><div class="legend-item"><span class="legend-stroke" style="--edge:#f1b970"></span>政府・監督</div><div class="legend-item"><span class="legend-stroke" style="--edge:#c1a7fb"></span>配下</div></div></div>
+<div class="backdrop" id="backdrop"></div><aside class="detail" id="detail" role="dialog" aria-label="人物の情報" aria-modal="true" tabindex="-1"><div class="detail-head"><div class="detail-eyebrow">CHARACTER DETAILS / 人物の詳細</div><button class="close" id="close" aria-label="閉じる">×</button></div><div id="detailContent"></div></aside>
+<footer class="footer">インフィニティ・ウォーの展開や結末には触れません。画像はWikipediaに掲載されている作品中の写真、または出演俳優の写真を読み込みます。人物写真が取得できない場合はイニシャル表示になります。表示される写真の権利は各権利者に帰属します。<br>制作：MARVEL視聴補助マップ（非公式・ファン向け） / 個人学習用</footer>
+<script type="application/json" id="data">{
+  "people": [
+    {
+      "group": "gov",
+      "id": "ross",
+      "name": "ロス国務長官",
+      "info": "サディアス・ロス。元軍人で現アメリカ国務長官。ソコヴィア協定を推進し、政府の監督を拒むヒーローと対立。",
+      "wiki": "Thaddeus Ross (Marvel Cinematic Universe)",
+      "actor": "William Hurt",
+      "first": "インクレディブル・ハルク／シビル・ウォー",
+      "extra": "※エヴェレット・ロス（CIA）とは別人。"
+    },
+    {
+      "group": "gov",
+      "id": "rhodey",
+      "name": "ウォーマシン",
+      "info": "ジェームズ・ローズ（ローディ）。空軍所属でトニーの親友。シビル・ウォーでは政府への協力を支持。",
+      "wiki": "James Rhodes (Marvel Cinematic Universe)",
+      "actor": "Don Cheadle",
+      "first": "アイアンマン／シビル・ウォー",
+      "extra": ""
+    },
+    {
+      "group": "gov",
+      "id": "fury",
+      "name": "ニック・フューリー",
+      "info": "元S.H.I.E.L.D.長官で、アベンジャーズ計画を始めた人物。",
+      "wiki": "Nick Fury (Marvel Cinematic Universe)",
+      "actor": "Samuel L. Jackson",
+      "first": "アベンジャーズ",
+      "extra": ""
+    },
+    {
+      "group": "gov",
+      "id": "hill",
+      "name": "マリア・ヒル",
+      "info": "元S.H.I.E.L.D.の幹部で、フューリーの側近。",
+      "wiki": "Maria Hill (Marvel Cinematic Universe)",
+      "actor": "Cobie Smulders",
+      "first": "アベンジャーズ",
+      "extra": ""
+    },
+    {
+      "group": "gov",
+      "id": "pepper",
+      "name": "ペッパー・ポッツ",
+      "info": "トニーの恋人。かつて彼の会社を支え、ヒーロー活動を続けるトニーを心配している。",
+      "wiki": "Pepper Potts (Marvel Cinematic Universe)",
+      "actor": "Gwyneth Paltrow",
+      "first": "アイアンマン",
+      "extra": ""
+    },
+    {
+      "group": "gov",
+      "id": "ned",
+      "name": "ネッド・リーズ",
+      "info": "ピーター・パーカーの親友。ピーターの正体を知っている。",
+      "wiki": "Ned Leeds (Marvel Cinematic Universe)",
+      "actor": "Jacob Batalon",
+      "first": "スパイダーマン：ホームカミング",
+      "extra": ""
+    },
+    {
+      "group": "gov",
+      "id": "everett",
+      "name": "エヴェレット・ロス",
+      "info": "CIA捜査官。『ブラックパンサー』でティ・チャラらと協力した。",
+      "wiki": "Everett K. Ross (Marvel Cinematic Universe)",
+      "actor": "Martin Freeman",
+      "first": "シビル・ウォー／ブラックパンサー",
+      "extra": "※ロス国務長官とは別人。"
+    },
+    {
+      "group": "avengers",
+      "id": "tony",
+      "name": "アイアンマン",
+      "info": "トニー・スターク。技術者でアベンジャーズの中心人物。シビル・ウォーではソコヴィア協定を支持。",
+      "wiki": "Tony Stark (Marvel Cinematic Universe)",
+      "actor": "Robert Downey Jr.",
+      "first": "アイアンマン／シビル・ウォー",
+      "extra": ""
+    },
+    {
+      "group": "avengers",
+      "id": "steve",
+      "name": "キャプテン・アメリカ",
+      "info": "スティーブ・ロジャース。政府の管理に反対してトニーと決裂した。",
+      "wiki": "Steve Rogers (Marvel Cinematic Universe)",
+      "actor": "Chris Evans (actor)",
+      "first": "ザ・ファースト・アベンジャー／シビル・ウォー",
+      "extra": ""
+    },
+    {
+      "group": "avengers",
+      "id": "natasha",
+      "name": "ブラック・ウィドウ",
+      "info": "ナターシャ・ロマノフ。元スパイ。シビル・ウォーでは政府側にいたがスティーブたちを逃がした。",
+      "wiki": "Natasha Romanoff (Marvel Cinematic Universe)",
+      "actor": "Scarlett Johansson",
+      "first": "アベンジャーズ／シビル・ウォー",
+      "extra": ""
+    },
+    {
+      "group": "avengers",
+      "id": "bruce",
+      "name": "ハルク",
+      "info": "ブルース・バナー。科学者で、怒りなどをきっかけにハルクへ変身する。",
+      "wiki": "Bruce Banner (Marvel Cinematic Universe)",
+      "actor": "Mark Ruffalo",
+      "first": "インクレディブル・ハルク／アベンジャーズ",
+      "extra": ""
+    },
+    {
+      "group": "avengers",
+      "id": "thor",
+      "name": "ソー",
+      "info": "アスガルドの雷神。ロキの兄で、オーディンの息子。",
+      "wiki": "Thor (Marvel Cinematic Universe)",
+      "actor": "Chris Hemsworth",
+      "first": "マイティ・ソー／バトルロイヤル",
+      "extra": ""
+    },
+    {
+      "group": "avengers",
+      "id": "sam",
+      "name": "ファルコン",
+      "info": "サム・ウィルソン。空中戦が得意で、スティーブを支える仲間。",
+      "wiki": "Sam Wilson (Marvel Cinematic Universe)",
+      "actor": "Anthony Mackie",
+      "first": "ウィンター・ソルジャー／シビル・ウォー",
+      "extra": ""
+    },
+    {
+      "group": "avengers",
+      "id": "bucky",
+      "name": "ウィンター・ソルジャー",
+      "info": "バッキー・バーンズ。スティーブの幼なじみ。HYDRAに長く洗脳・利用されていた。",
+      "wiki": "Bucky Barnes (Marvel Cinematic Universe)",
+      "actor": "Sebastian Stan",
+      "first": "ザ・ファースト・アベンジャー／シビル・ウォー",
+      "extra": ""
+    },
+    {
+      "group": "avengers",
+      "id": "wanda",
+      "name": "ワンダ",
+      "info": "ワンダ・マキシモフ。念動力などの力を持ち、ヴィジョンと親しい。",
+      "wiki": "Wanda Maximoff (Marvel Cinematic Universe)",
+      "actor": "Elizabeth Olsen",
+      "first": "エイジ・オブ・ウルトロン／シビル・ウォー",
+      "extra": ""
+    },
+    {
+      "group": "avengers",
+      "id": "vision",
+      "name": "ヴィジョン",
+      "info": "人工生命体。額のマインド・ストーンが重要。ワンダと特別な関係。",
+      "wiki": "Vision (Marvel Cinematic Universe)",
+      "actor": "Paul Bettany",
+      "first": "エイジ・オブ・ウルトロン／シビル・ウォー",
+      "extra": ""
+    },
+    {
+      "group": "avengers",
+      "id": "peter",
+      "name": "スパイダーマン",
+      "info": "ピーター・パーカー。高校生のヒーロー。トニーを尊敬し、ネッドが親友。",
+      "wiki": "Peter Parker (Marvel Cinematic Universe)",
+      "actor": "Tom Holland",
+      "first": "シビル・ウォー／ホームカミング",
+      "extra": ""
+    },
+    {
+      "group": "magic",
+      "id": "strange",
+      "name": "ドクター・ストレンジ",
+      "info": "元外科医の魔術師。タイム・ストーンを収めたアガモットの目を管理。",
+      "wiki": "Stephen Strange (Marvel Cinematic Universe)",
+      "actor": "Benedict Cumberbatch",
+      "first": "ドクター・ストレンジ",
+      "extra": ""
+    },
+    {
+      "group": "magic",
+      "id": "wong",
+      "name": "ウォン",
+      "info": "魔術師でストレンジの仲間。神秘的な魔術・書物に詳しい。",
+      "wiki": "Wong (Marvel Cinematic Universe)",
+      "actor": "Benedict Wong",
+      "first": "ドクター・ストレンジ",
+      "extra": ""
+    },
+    {
+      "group": "guardians",
+      "id": "quill",
+      "name": "スター・ロード",
+      "info": "ピーター・クイル。地球出身のガーディアンズのリーダー。ガモーラと親しい。",
+      "wiki": "Peter Quill (Marvel Cinematic Universe)",
+      "actor": "Chris Pratt",
+      "first": "ガーディアンズ・オブ・ギャラクシー",
+      "extra": ""
+    },
+    {
+      "group": "guardians",
+      "id": "gamora",
+      "name": "ガモーラ",
+      "info": "サノスの養女。彼に反発してガーディアンズへ加わった。",
+      "wiki": "Gamora (Marvel Cinematic Universe)",
+      "actor": "Zoe Saldaña",
+      "first": "ガーディアンズ・オブ・ギャラクシー",
+      "extra": ""
+    },
+    {
+      "group": "guardians",
+      "id": "nebula",
+      "name": "ネビュラ",
+      "info": "サノスの養女でガモーラの義理の姉妹。サノスを憎んでいる。",
+      "wiki": "Nebula (Marvel Cinematic Universe)",
+      "actor": "Karen Gillan",
+      "first": "ガーディアンズ・オブ・ギャラクシー",
+      "extra": ""
+    },
+    {
+      "group": "guardians",
+      "id": "drax",
+      "name": "ドラックス",
+      "info": "家族を失い、サノス側の勢力への復讐を望む戦士。",
+      "wiki": "Drax the Destroyer (Marvel Cinematic Universe)",
+      "actor": "Dave Bautista",
+      "first": "ガーディアンズ・オブ・ギャラクシー",
+      "extra": ""
+    },
+    {
+      "group": "guardians",
+      "id": "rocket",
+      "name": "ロケット",
+      "info": "機械や武器の扱いが得意なガーディアンズの仲間。",
+      "wiki": "Rocket (Marvel Cinematic Universe)",
+      "actor": "Bradley Cooper",
+      "first": "ガーディアンズ・オブ・ギャラクシー",
+      "extra": ""
+    },
+    {
+      "group": "guardians",
+      "id": "groot",
+      "name": "グルート",
+      "info": "木のような姿の宇宙人。ロケットと特に仲が良い。『リミックス』後は成長途中。",
+      "wiki": "Groot (Marvel Cinematic Universe)",
+      "actor": "Vin Diesel",
+      "first": "ガーディアンズ・オブ・ギャラクシー",
+      "extra": ""
+    },
+    {
+      "group": "guardians",
+      "id": "mantis",
+      "name": "マンティス",
+      "info": "相手に触れて感情を読み取り、眠らせる力を持つ。",
+      "wiki": "Mantis (Marvel Cinematic Universe)",
+      "actor": "Pom Klementieff",
+      "first": "ガーディアンズ・オブ・ギャラクシー：リミックス",
+      "extra": ""
+    },
+    {
+      "group": "wakanda",
+      "id": "tchalla",
+      "name": "ブラックパンサー",
+      "info": "ティ・チャラ。ワカンダ国王。ヴィブラニウムのスーツをまとい国を守る。",
+      "wiki": "T'Challa (Marvel Cinematic Universe)",
+      "actor": "Chadwick Boseman",
+      "first": "シビル・ウォー／ブラックパンサー",
+      "extra": ""
+    },
+    {
+      "group": "wakanda",
+      "id": "shuri",
+      "name": "シュリ",
+      "info": "ティ・チャラの妹。ワカンダの先進技術を研究する科学者。",
+      "wiki": "Shuri (Marvel Cinematic Universe)",
+      "actor": "Letitia Wright",
+      "first": "ブラックパンサー",
+      "extra": ""
+    },
+    {
+      "group": "wakanda",
+      "id": "okoye",
+      "name": "オコエ",
+      "info": "国王の親衛隊「ドーラ・ミラージュ」の隊長。",
+      "wiki": "Okoye (Marvel Cinematic Universe)",
+      "actor": "Danai Gurira",
+      "first": "ブラックパンサー",
+      "extra": ""
+    },
+    {
+      "group": "wakanda",
+      "id": "mbaku",
+      "name": "エムバク",
+      "info": "ジャバリ族のリーダー。かつてティ・チャラに王位をかけて挑戦した。",
+      "wiki": "M'Baku (Marvel Cinematic Universe)",
+      "actor": "Winston Duke",
+      "first": "ブラックパンサー",
+      "extra": ""
+    },
+    {
+      "group": "wakanda",
+      "id": "ayo",
+      "name": "アヨ",
+      "info": "ドーラ・ミラージュの一員。王家の護衛にあたる。",
+      "wiki": "Ayo (Marvel Cinematic Universe)",
+      "actor": "Florence Kasumba",
+      "first": "シビル・ウォー／ブラックパンサー",
+      "extra": ""
+    },
+    {
+      "group": "asgard",
+      "id": "loki",
+      "name": "ロキ",
+      "info": "ソーの弟。かつて地球侵略を企てたが、兄弟としての絆もある。",
+      "wiki": "Loki (Marvel Cinematic Universe)",
+      "actor": "Tom Hiddleston",
+      "first": "マイティ・ソー／バトルロイヤル",
+      "extra": ""
+    },
+    {
+      "group": "asgard",
+      "id": "heimdall",
+      "name": "ヘイムダル",
+      "info": "ビフレストを守るアスガルドの門番。遠くの世界を見渡せる。",
+      "wiki": "Heimdall (Marvel Cinematic Universe)",
+      "actor": "Idris Elba",
+      "first": "マイティ・ソー／バトルロイヤル",
+      "extra": ""
+    },
+    {
+      "group": "asgard",
+      "id": "collector",
+      "name": "コレクター",
+      "info": "タニリーア・ティヴァン。宇宙の珍しい品々を収集し、以前リアリティ・ストーンを預かっていた。",
+      "wiki": "Collector (Marvel Comics)",
+      "actor": "Benicio del Toro",
+      "first": "ガーディアンズ・オブ・ギャラクシー",
+      "extra": ""
+    },
+    {
+      "group": "asgard",
+      "id": "odin",
+      "name": "オーディン",
+      "info": "ソーとロキの父。『バトルロイヤル』以前に亡くなった、過去作の重要人物。",
+      "wiki": "Odin (Marvel Cinematic Universe)",
+      "actor": "Anthony Hopkins",
+      "first": "マイティ・ソー／バトルロイヤル",
+      "extra": "過去の人物（今回の現役チームではない）。"
+    },
+    {
+      "group": "asgard",
+      "id": "hela",
+      "name": "ヘラ",
+      "info": "ソーの姉。『バトルロイヤル』でアスガルドと対立した死の女神。",
+      "wiki": "Hela (Marvel Cinematic Universe)",
+      "actor": "Cate Blanchett",
+      "first": "マイティ・ソー バトルロイヤル",
+      "extra": "過去作の経緯を理解するための人物。"
+    },
+    {
+      "group": "thanos",
+      "id": "thanos",
+      "name": "サノス",
+      "info": "宇宙の強敵。6つのインフィニティ・ストーンを狙い、ガモーラとネビュラの養父でもある。",
+      "wiki": "Thanos (Marvel Cinematic Universe)",
+      "actor": "Josh Brolin",
+      "first": "アベンジャーズ／ガーディアンズ",
+      "extra": ""
+    },
+    {
+      "group": "thanos",
+      "id": "ebony",
+      "name": "エボニー・マウ",
+      "info": "サノスの配下「ブラック・オーダー」の一員。物体を操る特殊な能力を持つ。",
+      "wiki": "Ebony Maw",
+      "actor": "Tom Vaughan-Lawlor",
+      "first": "インフィニティ・ウォー（新登場）",
+      "extra": ""
+    },
+    {
+      "group": "thanos",
+      "id": "cull",
+      "name": "カル・オブシディアン",
+      "info": "ブラック・オーダーの一員。強大な怪力を持つ。",
+      "wiki": "Cull Obsidian",
+      "actor": "Terry Notary",
+      "first": "インフィニティ・ウォー（新登場）",
+      "extra": ""
+    },
+    {
+      "group": "thanos",
+      "id": "proxima",
+      "name": "プロキシマ・ミッドナイト",
+      "info": "ブラック・オーダーの一員。長い槍を武器とする戦士。",
+      "wiki": "Proxima Midnight",
+      "actor": "Carrie Coon",
+      "first": "インフィニティ・ウォー（新登場）",
+      "extra": ""
+    },
+    {
+      "group": "thanos",
+      "id": "corvus",
+      "name": "コーヴァス・グレイヴ",
+      "info": "ブラック・オーダーの一員。刃のついた特殊な武器で戦う。",
+      "wiki": "Corvus Glaive",
+      "actor": "Michael James Shaw",
+      "first": "インフィニティ・ウォー（新登場）",
+      "extra": ""
+    }
+  ],
+  "groups": [
+    {
+      "id": "gov",
+      "title": "政府・関係者",
+      "subtitle": "協定と地球の日常",
+      "color": "#d1aa72",
+      "x": 20,
+      "y": 20,
+      "w": 810,
+      "h": 380,
+      "cols": 4
+    },
+    {
+      "id": "magic",
+      "title": "魔術師",
+      "subtitle": "タイム・ストーンを守る",
+      "color": "#a0a1ff",
+      "x": 855,
+      "y": 20,
+      "w": 400,
+      "h": 380,
+      "cols": 2
+    },
+    {
+      "id": "guardians",
+      "title": "ガーディアンズ",
+      "subtitle": "宇宙の仲間たち",
+      "color": "#63d6be",
+      "x": 1280,
+      "y": 20,
+      "w": 1090,
+      "h": 380,
+      "cols": 4
+    },
+    {
+      "id": "avengers",
+      "title": "アベンジャーズ",
+      "subtitle": "シビル・ウォー以後、分裂中",
+      "color": "#6baaff",
+      "x": 20,
+      "y": 425,
+      "w": 1135,
+      "h": 550,
+      "cols": 5
+    },
+    {
+      "id": "thanos",
+      "title": "サノスとブラック・オーダー",
+      "subtitle": "インフィニティ・ストーンを狙う",
+      "color": "#e999ab",
+      "x": 1180,
+      "y": 425,
+      "w": 1190,
+      "h": 550,
+      "cols": 3
+    },
+    {
+      "id": "wakanda",
+      "title": "ワカンダ",
+      "subtitle": "国王と国を守る人々",
+      "color": "#dbacfc",
+      "x": 20,
+      "y": 1000,
+      "w": 765,
+      "h": 360,
+      "cols": 3
+    },
+    {
+      "id": "asgard",
+      "title": "アスガルドと宇宙",
+      "subtitle": "バトルロイヤルまでの関係",
+      "color": "#f1b46b",
+      "x": 810,
+      "y": 1000,
+      "w": 750,
+      "h": 360,
+      "cols": 3
+    }
+  ],
+  "edges": [
+    {
+      "a": "tony",
+      "b": "steve",
+      "type": "conflict",
+      "label": "シビル・ウォーで対立",
+      "main": true
+    },
+    {
+      "a": "tony",
+      "b": "rhodey",
+      "type": "ally",
+      "label": "親友",
+      "main": true
+    },
+    {
+      "a": "tony",
+      "b": "pepper",
+      "type": "family",
+      "label": "恋人",
+      "main": true
+    },
+    {
+      "a": "tony",
+      "b": "peter",
+      "type": "ally",
+      "label": "サポート・師弟",
+      "main": true
+    },
+    {
+      "a": "peter",
+      "b": "ned",
+      "type": "family",
+      "label": "親友",
+      "main": true
+    },
+    {
+      "a": "steve",
+      "b": "bucky",
+      "type": "family",
+      "label": "幼なじみ",
+      "main": true
+    },
+    {
+      "a": "steve",
+      "b": "sam",
+      "type": "ally",
+      "label": "相棒",
+      "main": true
+    },
+    {
+      "a": "steve",
+      "b": "natasha",
+      "type": "ally",
+      "label": "協力",
+      "main": true
+    },
+    {
+      "a": "wanda",
+      "b": "vision",
+      "type": "family",
+      "label": "特別な関係",
+      "main": true
+    },
+    {
+      "a": "ross",
+      "b": "steve",
+      "type": "authority",
+      "label": "ソコヴィア協定で対立",
+      "main": true
+    },
+    {
+      "a": "ross",
+      "b": "rhodey",
+      "type": "authority",
+      "label": "政府側の関係",
+      "main": true
+    },
+    {
+      "a": "ross",
+      "b": "bruce",
+      "type": "conflict",
+      "label": "かつて追跡",
+      "main": true
+    },
+    {
+      "a": "fury",
+      "b": "hill",
+      "type": "ally",
+      "label": "元S.H.I.E.L.D.",
+      "main": true
+    },
+    {
+      "a": "fury",
+      "b": "tony",
+      "type": "ally",
+      "label": "アベンジャーズ計画",
+      "main": true
+    },
+    {
+      "a": "everett",
+      "b": "tchalla",
+      "type": "ally",
+      "label": "ワカンダで協力",
+      "main": true
+    },
+    {
+      "a": "thor",
+      "b": "loki",
+      "type": "family",
+      "label": "兄弟",
+      "main": true
+    },
+    {
+      "a": "thor",
+      "b": "heimdall",
+      "type": "ally",
+      "label": "アスガルドの仲間",
+      "main": true
+    },
+    {
+      "a": "thor",
+      "b": "odin",
+      "type": "family",
+      "label": "父と子",
+      "main": false
+    },
+    {
+      "a": "thor",
+      "b": "hela",
+      "type": "conflict",
+      "label": "姉弟・過去に対立",
+      "main": false
+    },
+    {
+      "a": "loki",
+      "b": "odin",
+      "type": "family",
+      "label": "父と子",
+      "main": false
+    },
+    {
+      "a": "strange",
+      "b": "wong",
+      "type": "ally",
+      "label": "魔術師の仲間",
+      "main": true
+    },
+    {
+      "a": "quill",
+      "b": "gamora",
+      "type": "family",
+      "label": "親しい関係",
+      "main": true
+    },
+    {
+      "a": "gamora",
+      "b": "nebula",
+      "type": "family",
+      "label": "義理の姉妹",
+      "main": true
+    },
+    {
+      "a": "thanos",
+      "b": "gamora",
+      "type": "conflict",
+      "label": "養父・反発",
+      "main": true
+    },
+    {
+      "a": "thanos",
+      "b": "nebula",
+      "type": "conflict",
+      "label": "養父・憎悪",
+      "main": true
+    },
+    {
+      "a": "thanos",
+      "b": "drax",
+      "type": "conflict",
+      "label": "復讐相手",
+      "main": true
+    },
+    {
+      "a": "rocket",
+      "b": "groot",
+      "type": "family",
+      "label": "大切な相棒",
+      "main": true
+    },
+    {
+      "a": "quill",
+      "b": "rocket",
+      "type": "ally",
+      "label": "ガーディアンズの仲間",
+      "main": true
+    },
+    {
+      "a": "quill",
+      "b": "drax",
+      "type": "ally",
+      "label": "ガーディアンズの仲間",
+      "main": false
+    },
+    {
+      "a": "quill",
+      "b": "mantis",
+      "type": "ally",
+      "label": "ガーディアンズの仲間",
+      "main": false
+    },
+    {
+      "a": "tchalla",
+      "b": "shuri",
+      "type": "family",
+      "label": "兄妹",
+      "main": true
+    },
+    {
+      "a": "tchalla",
+      "b": "okoye",
+      "type": "ally",
+      "label": "国王と親衛隊",
+      "main": true
+    },
+    {
+      "a": "tchalla",
+      "b": "mbaku",
+      "type": "ally",
+      "label": "協力",
+      "main": true
+    },
+    {
+      "a": "okoye",
+      "b": "ayo",
+      "type": "ally",
+      "label": "ドーラ・ミラージュ",
+      "main": true
+    },
+    {
+      "a": "thanos",
+      "b": "ebony",
+      "type": "subordinate",
+      "label": "配下",
+      "main": true
+    },
+    {
+      "a": "thanos",
+      "b": "cull",
+      "type": "subordinate",
+      "label": "配下",
+      "main": true
+    },
+    {
+      "a": "thanos",
+      "b": "proxima",
+      "type": "subordinate",
+      "label": "配下",
+      "main": true
+    },
+    {
+      "a": "thanos",
+      "b": "corvus",
+      "type": "subordinate",
+      "label": "配下",
+      "main": true
+    },
+    {
+      "a": "thanos",
+      "b": "tony",
+      "type": "conflict",
+      "label": "共通の脅威",
+      "main": false
+    },
+    {
+      "a": "thanos",
+      "b": "strange",
+      "type": "conflict",
+      "label": "ストーンを狙う",
+      "main": false
+    },
+    {
+      "a": "thanos",
+      "b": "vision",
+      "type": "conflict",
+      "label": "ストーンを狙う",
+      "main": false
+    },
+    {
+      "a": "natasha",
+      "b": "sam",
+      "type": "ally",
+      "label": "共に行動",
+      "main": false
+    },
+    {
+      "a": "steve",
+      "b": "tchalla",
+      "type": "ally",
+      "label": "協力関係",
+      "main": false
+    },
+    {
+      "a": "bruce",
+      "b": "tony",
+      "type": "ally",
+      "label": "科学者同士",
+      "main": false
+    },
+    {
+      "a": "pepper",
+      "b": "rhodey",
+      "type": "ally",
+      "label": "トニーの関係者",
+      "main": false
+    },
+    {
+      "a": "nebula",
+      "b": "quill",
+      "type": "ally",
+      "label": "ガーディアンズとの縁",
+      "main": false
+    }
+  ]
+}</script>
+<script>
+(()=>{'use strict';
+const {people,groups,edges}=JSON.parse(document.querySelector('#data').textContent);
+const byId=Object.fromEntries(people.map(x=>[x.id,x]));const byGroup=Object.fromEntries(groups.map(x=>[x.id,x]));
+const edgeColor={ally:'#70b5fa',family:'#78d9b7',conflict:'#fa8088',authority:'#f1b970',subordinate:'#c1a7fb'};
+let selected=null,groupFilter='all',query='',showAllLines=false,mode='map',photoSource={};
+const $=s=>document.querySelector(s), svgns='http://www.w3.org/2000/svg';
+const viewport=$('#viewport'),world=$('#world'),svg=$('#edges');
+let scale=.71,dx=15,dy=15;const W=2390,H=1400;
+$('#numPeople').textContent=people.length;$('#numRelations').textContent=edges.length;
+function colorOf(p){return byGroup[p.group].color}
+function coords(p){return p._pos}
+function layout(){
+  groups.forEach(g=>{const members=people.filter(p=>p.group===g.id),rows=Math.ceil(members.length/g.cols),
+    gapX=g.w/g.cols,gapY=(g.h-77)/rows;
+    members.forEach((p,i)=>{const col=i%g.cols,row=Math.floor(i/g.cols);p._pos={x:g.x+(col+.5)*gapX,y:g.y+79+row*gapY+gapY/2};});
+  });
+}
+function avatar(p,cls='avatar'){
+ const el=document.createElement('div');el.className=cls;el.style.setProperty('--person-color',colorOf(p));
+ const letter=document.createElement('b');letter.textContent=p.name.slice(0,2);el.append(letter);
+ const img=document.createElement('img');img.alt=p.name+' の写真';img.loading='lazy';img.referrerPolicy='no-referrer';
+ img.onerror=()=>{img.classList.remove('ready');};el.append(img);
+ const src=photoSource[p.id];if(src){img.src=src;img.classList.add('ready')}
+ return el;
+}
+function renderGroups(){groups.forEach(g=>{
+ const z=document.createElement('section');z.className='zone';z.style.cssText=`--zone:${g.color};left:${g.x}px;top:${g.y}px;width:${g.w}px;height:${g.h}px`;
+ const h=document.createElement('div');h.className='zone-head';const t=document.createElement('h2');t.textContent=g.title;const subt=document.createElement('p');subt.textContent=g.subtitle;h.append(t,subt);z.append(h);world.append(z);
+ });}
+function renderNodes(){
+ people.forEach(p=>{const b=document.createElement('button');b.type='button';b.dataset.id=p.id;b.className='person-node';b.style.cssText=`--person-color:${colorOf(p)};left:${p._pos.x-82.5}px;top:${p._pos.y-68}px`;b.title=p.name;
+ b.append(avatar(p));const label=document.createElement('span');label.className='person-label';label.textContent=p.name;b.append(label);b.onclick=()=>openPerson(p.id);world.append(b);
+ });updateHighlight();}
+function drawEdges(){svg.replaceChildren();edges.forEach((e,i)=>{const a=coords(byId[e.a]),b=coords(byId[e.b]),p=document.createElementNS(svgns,'path');p.dataset.eidx=i;p.classList.add('edge');p.setAttribute('stroke',edgeColor[e.type]);const diffX=b.x-a.x;const bend=Math.max(35,Math.min(230,Math.abs(diffX)*.34));const path=`M ${a.x} ${a.y} C ${a.x+(diffX>=0?bend:-bend)} ${a.y},${b.x-(diffX>=0?bend:-bend)} ${b.y},${b.x} ${b.y}`;p.setAttribute('d',path);svg.append(p);});}
+function updateHighlight(){
+ const text=query.trim().toLowerCase();
+ document.querySelectorAll('.person-node').forEach(b=>{const p=byId[b.dataset.id];const match=(!text||`${p.name} ${p.info} ${p.first}`.toLowerCase().includes(text)) && (groupFilter==='all'||p.group===groupFilter);
+ b.classList.toggle('faded',!match && !selected);b.classList.toggle('matched',Boolean(text)&&match);b.classList.toggle('selected',selected===p.id);
+ if(selected) b.classList.toggle('faded',b.dataset.id!==selected&&!edges.some(e=>(e.a===selected&&e.b===p.id)||(e.b===selected&&e.a===p.id)));
+ });
+ svg.querySelectorAll('.line-label').forEach(x=>x.remove());
+ svg.querySelectorAll('path.edge').forEach(path=>{
+ const e=edges[Number(path.dataset.eidx)];const active=selected&&(e.a===selected||e.b===selected);
+ path.classList.toggle('active',!!active);path.classList.toggle('faded',!!selected&&!active);path.classList.toggle('hidden',(!showAllLines&&!selected&&!e.main)||(!showAllLines&&selected&&!active));
+ if(active){const a=coords(byId[e.a]),b=coords(byId[e.b]);const label=document.createElementNS(svgns,'text');label.classList.add('line-label');label.textContent=e.label;label.setAttribute('x',(a.x+b.x)/2);label.setAttribute('y',(a.y+b.y)/2-10);label.setAttribute('text-anchor','middle');svg.append(label);}
+ });}
+function renderList(){const el=$('#list');el.replaceChildren();let count=0;
+ groups.forEach(g=>{const ps=people.filter(p=>p.group===g.id&& (groupFilter==='all'||p.group===groupFilter) && (!query||`${p.name} ${p.info} ${p.first}`.toLowerCase().includes(query.toLowerCase())));if(!ps.length)return;count+=ps.length;
+ const sec=document.createElement('section');sec.className='list-group';const h=document.createElement('h2');h.className='list-group-title';const dot=document.createElement('span');dot.className='group-dot';dot.style.setProperty('--dot',g.color);h.append(dot,document.createTextNode(`${g.title} ・ ${ps.length}人`));sec.append(h);
+ const grid=document.createElement('div');grid.className='list-grid';ps.forEach(p=>{const b=document.createElement('button');b.className='list-person';b.append(avatar(p));const box=document.createElement('span');const name=document.createElement('strong');name.textContent=p.name;const sm=document.createElement('small');sm.textContent=p.first;b.append(box);box.append(name,sm);b.onclick=()=>openPerson(p.id);grid.append(b);});sec.append(grid);el.append(sec);});if(!count){const e=document.createElement('div');e.className='empty';e.textContent='該当する人物は見つかりませんでした。';el.append(e);} }
+function renderChips(){const c=$('#groupFilters');c.replaceChildren();[null,...groups].forEach(g=>{const b=document.createElement('button');b.type='button';b.className='group-chip'+((g?.id||'all')===groupFilter?' active':'');const color=g?g.color:'#eee';b.innerHTML=`<span class="group-dot" style="--dot:${color}"></span>`;b.append(document.createTextNode(g?g.title:'すべて'));b.onclick=()=>{groupFilter=g?.id||'all';renderChips();renderList();updateHighlight();if(mode==='map'&&g)focusGroup(g);};c.append(b);});}
+function renderDetail(id){const p=byId[id],g=byGroup[p.group],container=$('#detailContent');container.replaceChildren();
+ const header=document.createElement('div');header.className='detail-profile';header.append(avatar(p));const side=document.createElement('div');const title=document.createElement('h2');title.className='detail-name';title.textContent=p.name;const tag=document.createElement('span');tag.className='detail-tag';tag.textContent=g.title;side.append(title,tag);header.append(side);container.append(header);
+ const desc=document.createElement('p');desc.className='detail-p';desc.textContent=p.info;container.append(desc);
+ if(p.extra){const note=document.createElement('p');note.className='detail-p';note.style.color='#ffc0b8';note.textContent=p.extra;container.append(note);}
+ const first=document.createElement('div');first.className='mini-label';first.textContent='これまでの主な登場作品';const movie=document.createElement('div');movie.className='first-movie';movie.textContent=p.first;container.append(first,movie);
+ const rel=edges.filter(e=>e.a===id||e.b===id);const subtitle=document.createElement('div');subtitle.className='mini-label';subtitle.textContent=`関係する人物（${rel.length}人）`;container.append(subtitle);
+ const list=document.createElement('div');list.className='relation-list';rel.forEach(e=>{const other=byId[e.a===id?e.b:e.a];const b=document.createElement('button');b.className='relation-link';b.append(avatar(other));const txt=document.createElement('span');const name=document.createElement('strong');name.textContent=other.name;const relation=document.createElement('small');relation.textContent=e.label;txt.append(name,relation);b.append(txt);const m=document.createElement('span');m.className='edge-marker';m.style.setProperty('--edge',edgeColor[e.type]);b.append(m);b.onclick=()=>openPerson(other.id);list.append(b);});container.append(list);
+ const photo=document.createElement('div');photo.className='photo-source';photo.textContent='写真：Wikipedia掲載の役柄画像（ない場合は出演俳優の写真）／権利は各権利者に帰属';container.append(photo);
+}
+function openPerson(id){selected=id;renderDetail(id);updateHighlight();$('#backdrop').classList.add('visible');$('#detail').classList.add('open');document.body.style.overflow='hidden';$('#detail').focus({preventScroll:true});}
+function closePerson(){selected=null;$('#backdrop').classList.remove('visible');$('#detail').classList.remove('open');document.body.style.overflow='';updateHighlight();}
+$('#close').onclick=closePerson;$('#backdrop').onclick=closePerson;document.addEventListener('keydown',e=>{if(e.key==='Escape')closePerson()});
+function setMode(m){mode=m;$('#mapSection').hidden=m!=='map';$('#list').hidden=m!=='list';$('#mapTab').classList.toggle('active',m==='map');$('#listTab').classList.toggle('active',m==='list');$('#mapTab').setAttribute('aria-selected',String(m==='map'));$('#listTab').setAttribute('aria-selected',String(m==='list'));$('#allLines').hidden=m!=='map';if(m==='map')requestAnimationFrame(fitMap)}
+$('#mapTab').onclick=()=>setMode('map');$('#listTab').onclick=()=>setMode('list');
+$('#q').addEventListener('input',e=>{query=e.target.value;updateHighlight();renderList()});$('#allLines').onclick=()=>{showAllLines=!showAllLines;$('#allLines').classList.toggle('active',showAllLines);$('#allLines').setAttribute('aria-pressed',String(showAllLines));updateHighlight()};
+$('#reset').onclick=()=>{query='';groupFilter='all';$('#q').value='';renderList();renderChips();updateHighlight();fitMap()};
+function applyCamera(){world.style.transform=`translate(${dx}px,${dy}px) scale(${scale})`}
+function fitMap(){const r=viewport.getBoundingClientRect();if(!r.width||!r.height)return;scale=Math.min((r.width-22)/W,(r.height-20)/H);dx=(r.width-W*scale)/2;dy=(r.height-H*scale)/2;applyCamera()}
+function zoom(factor,x=viewport.clientWidth/2,y=viewport.clientHeight/2){const newScale=Math.min(2.0,Math.max(.17,scale*factor));const ratio=newScale/scale;dx=x-(x-dx)*ratio;dy=y-(y-dy)*ratio;scale=newScale;applyCamera()}
+function focusGroup(g){const rw=viewport.clientWidth,rh=viewport.clientHeight;scale=Math.min(1.16,(rw-45)/g.w,(rh-45)/g.h);dx=rw/2-(g.x+g.w/2)*scale;dy=rh/2-(g.y+g.h/2)*scale;applyCamera()}
+$('#plus').onclick=()=>zoom(1.3);$('#minus').onclick=()=>zoom(1/1.3);$('#fit').onclick=fitMap;
+viewport.addEventListener('wheel',e=>{e.preventDefault();const r=viewport.getBoundingClientRect();zoom(e.deltaY<0?1.1:.90,e.clientX-r.left,e.clientY-r.top)},{passive:false});
+let drag=null;viewport.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,dx,dy};viewport.setPointerCapture(e.pointerId);viewport.classList.add('dragging')});viewport.addEventListener('pointermove',e=>{if(drag&&e.pointerId===drag.id){dx=drag.dx+e.clientX-drag.x;dy=drag.dy+e.clientY-drag.y;applyCamera()}});function endDrag(e){if(drag&&drag.id===e.pointerId){drag=null;viewport.classList.remove('dragging')}}viewport.addEventListener('pointerup',endDrag);viewport.addEventListener('pointercancel',endDrag);
+// Wikipedia's PageImages API returns an on-screen thumbnail of a character where available,
+// falling back to a real photograph of the actor when no character thumbnail exists.
+async function queryWikipedia(titles){const map=new Map();const unique=[...new Set(titles)];for(let i=0;i<unique.length;i+=25){const chunk=unique.slice(i,i+25);const url=new URL('https://en.wikipedia.org/w/api.php');url.search=new URLSearchParams({origin:'*',action:'query',format:'json',formatversion:'2',redirects:'1',prop:'pageimages',pilicense:'any',piprop:'thumbnail',pithumbsize:'360',titles:chunk.join('|')}).toString();try{
+ const res=await fetch(url,{signal:AbortSignal.timeout(20000)});if(!res.ok)continue;const j=await res.json();const aliases=new Map((j.query?.redirects||[]).map(x=>[x.from,x.to]));const normalized=new Map((j.query?.normalized||[]).map(x=>[x.from,x.to]));const found=new Map((j.query?.pages||[]).map(x=>[x.title,x.thumbnail?.source]));for(const title of chunk){let name=normalized.get(title)||title;name=aliases.get(name)||name;map.set(title,found.get(name)||null);}
+ }catch(e){console.warn('Wikipedia photo fetch:',e)} }
+ return map;}
+function photoUpdate(p,url){if(!url)return;photoSource[p.id]=url;document.querySelectorAll('button .avatar img').forEach(img=>{if(img.alt===p.name+' の写真'){img.src=url;img.classList.add('ready')}});}
+async function loadPhotos(){let cached=null;try{cached=localStorage.getItem('mcu-people-photo-cache-v2')}catch(e){}if(cached){try{const obj=JSON.parse(cached);if(obj&&typeof obj==='object'){for(const p of people){if(obj[p.id])photoUpdate(p,obj[p.id]);}}}catch(e){}}
+ const lookup=await queryWikipedia([...people.map(p=>p.wiki),...people.map(p=>p.actor)]);
+ for(const p of people){const best=lookup.get(p.wiki)||lookup.get(p.actor);if(best)photoUpdate(p,best)};
+ try{localStorage.setItem('mcu-people-photo-cache-v2',JSON.stringify(photoSource))}catch(e){} }
+layout();renderGroups();drawEdges();renderNodes();renderChips();renderList();requestAnimationFrame(()=>{if(window.matchMedia('(max-width: 660px)').matches)setMode('list');else fitMap()});window.addEventListener('resize',()=>{if(mode==='map')fitMap()});loadPhotos();
+})();
+</script>
+</body></html>
